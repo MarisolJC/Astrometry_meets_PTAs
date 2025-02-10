@@ -19,12 +19,12 @@ theta0 = np.pi/2 - np.deg2rad(48)
 phi0 = np.deg2rad(264)
 # vvec = np.array([0,0,1])
 #vvec = np.array([0.6, 0.4, 0.69282]) # ONLY FOR TEST
-#vvec = skyvec(theta0,phi0)
+vvec = skyvec(theta0,phi0)
 
 def dir(theta,phi):
     return np.array([np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]).T
 
-vvec = dir(theta0,phi0)
+#vvec = dir(theta0,phi0)
 
 def projector(pvec):
     # pvec = hp.pix2vec(nside,pix)
