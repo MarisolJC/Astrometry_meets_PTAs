@@ -1,6 +1,6 @@
 # Measuring SGWB with Astrometry and PTAs
 
-This repository contains the codes to calculate and visualise the the Overlap functions reported on 2412.14010.
+This repository contains the codes to calculate and visualise the Overlap functions reported on 2412.14010.
 
 
 
