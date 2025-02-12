@@ -1,6 +1,7 @@
 # Measuring SGWB with Astrometry and PTAs
 
 This repository contains the codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs) reported in 2412.14010.
+
 ![K1K1_dipole_Random](https://github.com/user-attachments/assets/57a52a54-28e9-47e0-92a4-619edd5c1c58)
 
 The folder **pta_astro_MAPS** contains Jupyter notebooks to plot maps. If you have never used **Healpy** for visualisation, there are more detailed explanations in the notebook **ORFs_Visualisation.ipynb**.
