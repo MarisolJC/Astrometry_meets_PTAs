@@ -17,7 +17,7 @@ def skyvec(theta,phi): #unit vector
 
 theta0 = np.pi/2 - np.deg2rad(48) 
 phi0 = np.deg2rad(264)
-# vvec = np.array([0,0,1])
+# vvec = np.array([0,0,1]) # ONLY FOR TEST
 #vvec = np.array([0.6, 0.4, 0.69282]) # ONLY FOR TEST
 vvec = skyvec(theta0,phi0)
 
