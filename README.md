@@ -4,6 +4,7 @@ This repository contains the codes[^1] to calculate and visualise the Overlap Re
 
 ![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](https://drive.google.com/drive/folders/1vm9x2sI7AAALIZMJYmcGaaYZ6IHPshFy)
 
+
 The folder **pta_astro_MAPS** contains Jupyter notebooks to plot maps. If you have never used **Healpy** for visualisation, there are more detailed explanations in the notebook **ORFs_Visualisation.ipynb**.
 
 [^1]: This codes where runed with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31
