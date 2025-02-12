@@ -2,7 +2,8 @@
 
 This repository contains the codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs) reported in 2412.14010.
 
-![Screenshot of a comment on a GitHub issue showing an image, added in the Markdown, of an Octocat smiling and raising a tentacle.](/main/pta_astro_MAPS/K1K1_dipole_Random.png)
+![K1K1_dipole_Random](https://github.com/user-attachments/assets/288303c1-9d31-4516-8bab-d76564019888)
+
 
 The folder **pta_astro_MAPS** contains Jupyter notebooks to plot maps. If you have never used **Healpy** for visualisation, there are more detailed explanations in the notebook **ORFs_Visualisation.ipynb**.
 
