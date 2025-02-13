@@ -7,7 +7,7 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 ![K1K1_dipole_Random](https://github.com/user-attachments/assets/57a52a54-28e9-47e0-92a4-619edd5c1c58)
 
 You will find this information in :file_folder: **Maps-PTA_Astro**. The folder contains 4 Jupyter notebooks:
-- **Maps_Autocorrelation.ipynb** : This one creats maps for the ORFs for astrometry $\mathrm{Tr}[\mathbf{H}_0 \mathbf{H}_0]$ and $\mathrm{Tr}[\mathbf{H}_1 \mathbf{H}_1]$.
+- **Maps_Autocorrelation.ipynb** : This one creats maps for the astrometry ORFs $\mathrm{Tr}[\mathbf{H}_0 \mathbf{H}_0]$ and $\mathrm{Tr}[\mathbf{H}_1 \mathbf{H}_1]$.
 - **Maps_PTAxAstro.ipynb** :
 - **ORFs_Visualisation.ipynb** : If you have never used **Healpy** for visualisation, this notebook contains detailed explanations for this.
 - **pta_x_astro_Test.ipynb** :
