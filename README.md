@@ -2,9 +2,9 @@
 
 This repository contains codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs) reported in 2412.14010.
 
-![K1K1_dipole_Random](https://github.com/user-attachments/assets/57a52a54-28e9-47e0-92a4-619edd5c1c58)
-
 # How do we plot our Maps?
+
+![K1K1_dipole_Random](https://github.com/user-attachments/assets/57a52a54-28e9-47e0-92a4-619edd5c1c58)
 
 You will find this information in **pta_astro_MAPS**. The folder contains 4 Jupyter notebooks:
 - **Maps_Autocorrelation.ipynb** :
