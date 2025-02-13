@@ -4,9 +4,16 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 ![K1K1_dipole_Random](https://github.com/user-attachments/assets/57a52a54-28e9-47e0-92a4-619edd5c1c58)
 
-# pta_astro_MAPS
+# How do we plot our Maps?
 
-Contains Jupyter notebooks to plot maps. If you have never used **Healpy** for visualisation, there are more detailed explanations in the notebook **ORFs_Visualisation.ipynb**.
+You will find this information in **pta_astro_MAPS**. The folder contains 4 Jupyter notebooks:
+- **Maps_Autocorrelation.ipynb** :
+- **Maps_PTAxAstro.ipynb** :
+- **ORFs_Visualisation.ipynb**
+- **pta_x_astro_Test.ipynb**
+
+
+If you have never used **Healpy** for visualisation, there are more detailed explanations in the notebook **ORFs_Visualisation.ipynb**.
 
 # Forecast 
 
