@@ -18,7 +18,7 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 ## Forecast 
 
-* In the folder with this name you will find a notebook to plot the forecasts we found for the magnitude of the SGWB energy density with the astrometry estimators $p_0$ and $p_1$.
+* You will find a notebook to plot the forecasts we found for the magnitude of the SGWB energy density with the astrometry estimators $p_0$ and $p_1$ in :file_folder: **Forecast**.
 
 
 [^1]: This codes where runed with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31
