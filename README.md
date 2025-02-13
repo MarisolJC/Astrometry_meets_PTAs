@@ -8,7 +8,7 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 You will find this information in :file_folder: **Maps-PTA_Astro**. The folder contains 4 Jupyter notebooks:
 - **Maps_Autocorrelation.ipynb** : This creats maps for the astrometry ORFs $\mathrm{Tr}[\mathbf{H}_0 \mathbf{H}_0]$ and $\mathrm{Tr}[\mathbf{H}_1 \mathbf{H}_1]$.
-- **Maps_PTAxAstro.ipynb** : This creats maps for the PTA_astrometry cross-correlation ORFs $\mathbf{K}_0 \mathbf{K}_0^{T}$ and $\mathbf{K}_{1} \mathbf{K}_{1}^{T}$.
+- **Maps_PTAxAstro.ipynb** : This creats maps for the PTA_astrometry cross-correlation ORFs $\mathbf{K}_0 \mathbf{K}_0^{T}$ and $\mathbf{K}_1 \mathbf{K}_1 ^{T}$.
 - **ORFs_Visualisation.ipynb** : If you have never used **Healpy** for visualisation, this notebook contains detailed explanations for this.
 - **pta_x_astro_Test.ipynb** :
 
