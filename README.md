@@ -19,7 +19,9 @@ In the folder with this name you will find a notebook to plot the forecasts we f
 
 [^1]: This codes where runed with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31
 
-# To cite our work
+
+## To cite our work
+
 ```
 @article{cruz2024astrometry,
   title={Astrometry meets Pulsar Timing Arrays: Synergies for Gravitational Wave Detection},
