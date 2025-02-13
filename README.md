@@ -12,7 +12,7 @@ You will find this information in :file_folder: **Maps-PTA_Astro**. The folder c
 - **ORFs_Visualisation.ipynb** : If you have never used **Healpy** for visualisation, this notebook contains detailed explanations for this.
 - **pta_x_astro_Test.ipynb** : This is a numerical test for the ORFs. It calculates the integrals (2.10) and (2.27) of the paper.
 
-# Forecast 
+## Forecast 
 
 In the folder with this name you will find a notebook to plot the forecasts we found for the magnitude of the SGWB energy density with the astrometry estimators $p_0$ and $p_1$.
 
