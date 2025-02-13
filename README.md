@@ -14,7 +14,7 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 ## ORFs Angular dependence 
 
-* The folder **Plots** has a notebook to show the beheavior of the ORFs with respect to the angles between pairs of stars or between stars and pulsars.
+* :file_folder: **Plots** has a notebook to show the beheavior of the ORFs with respect to the angles between pairs of stars or between stars and pulsars.
 
 ## Forecast 
 
