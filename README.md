@@ -2,11 +2,11 @@
 
 This repository contains codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs) reported in :page_facing_up: 2412.14010.
 
-## Maps
+## SGWB Maps
 
 ![K1K1_dipole_Random](https://github.com/user-attachments/assets/57a52a54-28e9-47e0-92a4-619edd5c1c58)
 
-* The folder **Maps-PTA_Astro** contains 4 Jupyter notebooks:
+* :file_folder: **Maps-PTA_Astro** contains 4 Jupyter notebooks:
   
   1. **Maps_Autocorrelation.ipynb** : Plots maps for the astrometry ORFs $\mathrm{Tr}[\mathbf{H}_0 \mathbf{H}_0]$ and $\mathrm{Tr}[\mathbf{H}_1 \mathbf{H}_1]$.
      
