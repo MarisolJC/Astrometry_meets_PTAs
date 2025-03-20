@@ -22,10 +22,14 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 ## Forecast 
 
-* You will find a notebook to plot the forecasts found for the magnitude of the SGWB energy density with the astrometry estimators $p_0$ and $p_1$ in :file_folder: **Forecast**.
+* You will find a notebook to plot the forecasts found for the magnitude of the SGWB energy density with the astrometry estimators $p_0$ and $p_1$ (see section 3.1 of the paper) in :file_folder: **Forecast**.
+
+## Fisher forecasts for PTA and Astrometry synergy
+
+* The folder :file_folder: **Fisher_Forecast_Synergy** contains the necessary files required to reproduce the results of section 3.2 of the paper. The files helper_functions.py and response are used to define the pta, astrometry and cross-correlation response functions. The other files with prefix astro can be run as python astro_XYZ.py npsr nstar
 
 
-[^1]: This codes where runed with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31
+[^1]: The codes were run with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31
 
 
 ## To cite our work
