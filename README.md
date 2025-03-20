@@ -1,6 +1,6 @@
 # Measuring SGWB with Astrometry and PTAs
 
-This repository contains codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs) reported in :page_facing_up: 2412.14010.
+This repository contains codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs), as well as the Fisher forecasts reported in :page_facing_up: 2412.14010.
 
 ## SGWB Maps
 
