@@ -39,7 +39,7 @@ matplotlib.rc('text', usetex=True)
 Tobs = 15*year
 df = 1/Tobs
 nfreqs = 15
-freqs = 1/Tobs +df/2 + df*np.arange(0,nfreqs)
+freqs = 1/Tobs + df*np.arange(0,nfreqs) # +df/2 + df*np.arange(0,nfreqs)
 fref = 1/year
 logamp = -14.6 #np.log10(6.4e-15) 
 logI = 2*logamp - np.log10(2*fref)
@@ -73,8 +73,8 @@ cos_theta =  np.random.uniform(-0.96,0.96,size=npsr)
 theta = np.arccos(cos_theta)
 psr_pos = np.array( [np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]  ).T
 hfreqs = np.logspace(np.log10(5e-10),np.log10(5e-7),500)
-psrs = hsim.sim_pta(timespan=20, cad=20, sigma=1e-7,
-                    phi=phi,theta=theta,A_rn=1e-15,alpha=-2/3,freqs=hfreqs)
+psrs = hsim.sim_pta(timespan=15, cad=20, sigma=1e-7,
+                    phi=phi,theta=theta,A_rn=1.5e-15,alpha=-2/3,freqs=hfreqs)
 
 sp = hsen.Spectrum(psrs[0], freqs=hfreqs)
 sigmasq_hsim = interp1d(hfreqs,1/sp.NcalInv) # type: ignore
@@ -128,7 +128,7 @@ print("Param cov pta\n",param_cov_pta)
 nstar = int(sys.argv[2])
 
 # astro noise levels
-sigma_mas = 0.01 # mas
+sigma_mas = float(sys.argv[3]) #0.01 # mas
 conv_fac = 4.84814e-6 # as to radians
 def noise_astro(f,sigma=sigma_mas,dT=year/15.): # every week 52, every 2 weeks 26,...
     sigma = sigma * 1e-3 * conv_fac
@@ -171,7 +171,7 @@ def cross_single_pulsar(qvec):
 
 cross_cov = jax.lax.map(cross_single_pulsar,stars,batch_size=200)
 cross_cov = jnp.nan_to_num(cross_cov,nan=0.)
-cross_cov = jnp.transpose(cross_cov,axes=(1,0,2)).reshape(npsr,2*nstar) 
+cross_cov = jnp.transpose(cross_cov,axes=(1,0,2)).reshape(npsr,2*nstar)  / (4*np.pi)
 print("Cross cov shape ",cross_cov.shape)
 
 nside = 4
@@ -208,7 +208,7 @@ cross_cov_dipole = jax.lax.map(single_star_cross_PTA,stars,batch_size=200)
 print("Cross cov dipole shape ",cross_cov_dipole.shape)
 print("cross cov nans",jnp.isnan(cross_cov_dipole).any())
 cross_cov_dipole = jnp.nan_to_num(cross_cov_dipole,nan=0.)
-cross_cov_dipole = jnp.transpose(cross_cov_dipole,axes=(1,0,2)).reshape(npsr,2*nstar) 
+cross_cov_dipole = jnp.transpose(cross_cov_dipole,axes=(1,0,2)).reshape(npsr,2*nstar) / (4*np.pi)
 print("Cross cov dipole shape ",cross_cov_dipole.shape)
 bb_mat = cross_cov @ jnp.transpose(cross_cov)
 bb_mat_dipole = cross_cov_dipole @ jnp.transpose(cross_cov_dipole)
