@@ -14,7 +14,7 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
   
   3. **ORFs_Visualisation.ipynb** : If you have never used **Healpy** for visualisation, this notebook contains detailed explanations for this.
      
-  4. **pta_x_astro_Test.ipynb** : This is a test for the ORFs. It calculates the integrals (2.10) and (2.22) of the paper and compare them with the analytical results from (2.15) and (2.27).
+  4. **pta_x_astro_Test.ipynb** : This is a test for the ORFs. It calculates the integrals (2.10) and (2.22) of the paper and compare them with the analytical results from (2.16) and (2.28).
 
 ## ORFs Angular dependence 
 
