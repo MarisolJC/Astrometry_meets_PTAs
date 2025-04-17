@@ -20,9 +20,9 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 * :file_folder: **Plots** has a notebook to show the behavior of the ORFs with respect to the angles between pairs of stars or between stars and pulsars.
 
-## Forecast 
+## Astrometry forecast 
 
-* You will find a notebook in :file_folder: **Forecast** to get the predictions for the magnitude of the SGWB energy density with the results in section 3.1 of the paper mentioned.
+* You will find a notebook in :file_folder: **Astrometry_Forecast** to get the predictions for the magnitude of the SGWB energy density with the results in section 3.1 of the paper mentioned.
 
 ## Fisher forecasts for PTA and Astrometry synergy
 
