@@ -22,7 +22,7 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 ## Forecast 
 
-* You will find a notebook to plot the forecasts found for the magnitude of the SGWB energy density with the results in section 3.1 of the paper mentioned in :file_folder: **Forecast**.
+* You will find a notebook to plot the forecasts for the magnitude of the SGWB energy density with the results in section 3.1 of the paper mentioned in :file_folder: **Forecast**.
 
 ## Fisher forecasts for PTA and Astrometry synergy
 
