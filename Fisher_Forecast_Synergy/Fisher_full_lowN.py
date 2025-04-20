@@ -34,6 +34,11 @@ axislabelfontsize='large'
 matplotlib.rc('font', **font)
 matplotlib.rc('text', usetex=True)
 
+if len(sys.argv) < 3:
+    print("Usage: python Fisher_series_vs_full.py <npsr> <nstar>")
+    print("  npsr = number of pulsars")
+    print("  nstar = number of stars")
+    sys.exit(1)
 
 # The GWB
 Tobs = 15*year
@@ -55,7 +60,7 @@ def gwb_model(logamp,gamma,f=1/year,fref=1/year):
 
 # Pulsar only part
 Tobs = 15*year
-npsr =  75
+npsr = int(sys.argv[1]) # 75
 np.random.seed(100000)
 phi = np.random.uniform(0, 2*np.pi,size=npsr)
 cos_theta =  np.random.uniform(-0.96,0.96,size=npsr)
@@ -118,7 +123,7 @@ for name in keys:
 
 
 # now the astro setup
-nstar = int(sys.argv[1])
+nstar = int(sys.argv[2])
 Tobs = 15*year
 
 # astro noise levels
