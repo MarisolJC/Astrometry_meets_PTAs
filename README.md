@@ -20,13 +20,13 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 
 * :file_folder: **Plots** has a notebook to show the behavior of the ORFs with respect to the angles between pairs of stars or between stars and pulsars.
 
-## Forecast 
+## Astrometry forecast 
 
-* You will find a notebook in :file_folder: **Forecast** to get the predictions for the magnitude of the SGWB energy density with the results in section 3.1 of the paper mentioned.
+* :file_folder: **Astrometry_Forecast** contains a notebook for the predictions on the magnitude of the SGWB energy density with Astrometry.
 
 ## Fisher forecasts for PTA and Astrometry synergy
 
-* The folder :file_folder: **Fisher_Forecast_Synergy** contains the necessary files required to reproduce the results of section 3.2 of the paper. The files helper_functions.py and response are used to define the pta, astrometry and cross-correlation response functions. The other files with prefix astro can be run from the command line as ``python astro_XYZ.py npsr nstar``. This will require an additional library [Hasasia](https://hasasia.readthedocs.io/en/latest/index.html) to generate the PTA noise curves.
+* The folder :file_folder: **Fisher_Forecast_Synergy** contains the necessary files required to reproduce the results of section 3.2 of the paper. The files helper_functions.py and response are used to define the pta, astrometry and cross-correlation response functions. The other files with can be run from the command line (see the invidual files for the command line inputs). This will require an additional library [Hasasia](https://hasasia.readthedocs.io/en/latest/index.html) to generate the PTA noise curves. The python notebook **noise_vs_signal.ipynb** shows plots of the signal vs noise for the different scenarios studied in the paper.
 
 
 [^1]: The codes were run with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31, healpy 1.17.3.

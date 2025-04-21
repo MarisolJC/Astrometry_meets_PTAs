@@ -4,17 +4,13 @@ from scipy.interpolate import interp1d
 import healpy as hp
 import sys
 import os
-os.environ['XLA_FLAGS'] = "--xla_force_host_platform_device_count=8" # number of devices
 import jax.numpy as jnp
 import jax
 from jax import vmap, grad, jit
 from jax import config
 from jax.lax import stop_gradient
-from jax.sharding import PartitionSpec as P, NamedSharding
 config.update("jax_enable_x64", True)
 
-num_devices = jax.local_device_count()
-print("Num local devices = ",num_devices)
 
 from helper_functions import HD, proj_angular, psr_dipole, pta_x_astro, split_vmap
 from helper_functions import pairwise_monopole_v2 as pairwise_monopole
@@ -34,6 +30,12 @@ axislabelfontsize='large'
 matplotlib.rc('font', **font)
 matplotlib.rc('text', usetex=True)
 
+if len(sys.argv) < 4:
+    print("Usage: python Fisher_series_vs_full.py <npsr> <nstar> <sigma_mas>")
+    print("  npsr = number of pulsars")
+    print("  nstar = number of stars")
+    print("  sigma_mas = astrometric noise in mas")
+    sys.exit(1)
 
 # The GWB
 Tobs = 15*year
@@ -74,20 +76,26 @@ theta = np.arccos(cos_theta)
 psr_pos = np.array( [np.sin(theta)*np.cos(phi),np.sin(theta)*np.sin(phi),np.cos(theta)]  ).T
 hfreqs = np.logspace(np.log10(5e-10),np.log10(5e-7),500)
 psrs = hsim.sim_pta(timespan=15, cad=20, sigma=1e-7,
-                    phi=phi,theta=theta,A_rn=1.5e-15,alpha=-2/3,freqs=hfreqs)
+                    phi=phi,theta=theta,A_rn=3.25e-15,alpha=-2/3,freqs=hfreqs)
 
 sp = hsen.Spectrum(psrs[0], freqs=hfreqs)
 sigmasq_hsim = interp1d(hfreqs,1/sp.NcalInv) # type: ignore
 
+print(f"Psr pos shape {psr_pos.shape}")
 pta_cov = vmap(vmap(HD,in_axes=(0,None),out_axes=(0)),in_axes=(None,0),out_axes=(0)) (psr_pos,psr_pos)
-pta_cov = np.nan_to_num(pta_cov,nan=0.) 
-pta_cov+= np.eye(len(pta_cov))*(1 - np.diag(pta_cov)) 
+pta_cov = np.nan_to_num(pta_cov,nan=0.) # nans come from the log term in HD
+pta_cov = pta_cov - np.diag(np.diag(pta_cov)) # remove diagonal to make zeros on diagonal
+pta_cov = pta_cov + 8/3 * np.eye(npsr) # diagonal terms should be 8/3 according to our normalisation conventions cov -> cov*(1+delta_{pq})
+print(np.isnan(pta_cov).any())
 
 # dipole
 hn_dot_hp = np.sum(psr_pos*hn,axis=1)
 costheta_mat = jnp.einsum('ij,kj->ik',psr_pos,psr_pos)
-pta_cov_dipole = psr_dipole(costheta_mat) * np.add.outer(hn_dot_hp,hn_dot_hp)
- 
+pta_cov_dipole = psr_dipole(costheta_mat) 
+pta_cov_dipole+= np.diag(np.diag(pta_cov_dipole)) # double the diagonal cov -> cov*(1+delta_{pq})
+pta_cov_dipole = pta_cov_dipole * np.add.outer(hn_dot_hp,hn_dot_hp)
+print(np.isnan(pta_cov_dipole).any())
+
 gwb_args = (logamp,gamma,beta)
 
 print("Calculating PTA only Fisher")
@@ -149,21 +157,6 @@ del star_pos, theta,cos_theta,phi
 
 proj_mat = proj_angular(stars)
 
-#setup the cross-cov mat
-
-# method 1
-# def cross_single_pulsar(psr_pos):
-#     cross = vmap(pta_x_astro,in_axes=(None,0),out_axes=(0))(psr_pos,stars)
-#     cross_ang = jnp.einsum('ijk,ik...->ij',proj_mat,cross)
-#     return stop_gradient(cross_ang)
-
-# cross_cov = jax.lax.map(cross_single_pulsar,psr_pos,batch_size=20)
-# cross_cov = jnp.nan_to_num(cross_cov,nan=0.)
-# cross_cov = jnp.transpose(cross_cov,axes=(0,1,2)).reshape(npsr,2*nstar) 
-# print("Cross cov shape ",cross_cov.shape)
-# bb_mat = cross_cov @ jnp.transpose(cross_cov)
-
-#method 2
 def cross_single_pulsar(qvec):
     proj_factor = proj_angular(jnp.atleast_2d(qvec))
     cross = jnp.einsum('ijk,...ik->ij',proj_factor,vmap(pta_x_astro,in_axes=(0,None),out_axes=(0))(psr_pos,qvec))
@@ -179,25 +172,6 @@ npix = hp.nside2npix(nside)
 pix = np.arange(npix)
 pvec_array = np.array(hp.pix2vec(nside,pix)).T
 
-# method 1 
-# vmap over stars - high memory
-# f1 = lambda n, q : pulsar_star_pair_dipole(nvec=n,qvec=q,pvec_array=pvec_array,nside=nside,vvec=hn)
-# f2 = lambda n: jnp.einsum('ijk,ik...->ij',proj_mat,vmap(f1,in_axes=(None,0),out_axes=(0))(n,stars))
-# cross_cov_dipole = jax.lax.map(f2,psr_pos,batch_size=25)
-# print("Cross cov dipole shape ",cross_cov_dipole.shape)
-# print("cross cov nans",jnp.isnan(cross_cov_dipole).any())
-# cross_cov_dipole = jnp.nan_to_num(cross_cov_dipole,nan=0.)
-# cross_cov_dipole = jnp.transpose(cross_cov_dipole,axes=(0,1,2)).reshape(npsr,2*nstar) 
-# print("Cross cov dipole shape ",cross_cov_dipole.shape)
-# bb_mat = cross_cov @ jnp.transpose(cross_cov)
-# bb_mat_dipole = cross_cov_dipole @ jnp.transpose(cross_cov_dipole)
-# bb_mat_md = cross_cov @ jnp.transpose(cross_cov_dipole)
-# bb_mat_dm = jnp.transpose(bb_mat_md)
-# print(bb_mat_dm.shape)
-# print("computed astrometric auto and cross")
-
-# method 2 
-# vmap over psrs - low memory usage
 f1 = lambda n, q : pulsar_star_pair_dipole(nvec=n,qvec=q,pvec_array=pvec_array,nside=nside,vvec=hn)
 def single_star_cross_PTA(qvec):
     cross = vmap(f1,in_axes=(0,None))(psr_pos,qvec)
@@ -221,46 +195,6 @@ print("computed astrometric auto and cross")
 del proj_mat, stars, cross_cov, cross_cov_dipole
 jax.clear_caches()
 
-#------------------------------Not necessary to caclulate Astro only Fisher------------------------------
-# def astro_fisher(freqs,gwb_args,gwb_model=gwb_model,star_cov=star_cov,):    
-#     nparams = len(gwb_args)
-#     print(f"Fisher for {nparams} parameters")
-#     print(f"Using frequencies\n {freqs*Tobs}")
-#     mat = np.zeros((nparams,nparams))
-#     fish = np.zeros((nparams,nparams))
-#     grad_fn = grad(gwb_model,argnums=list(range(nparams)))
-#     grad_dipole = grad(gwb_dipole,argnums=list(range(nparams)))
-#     grad_terms = jnp.zeros(nparams)
-#     grad_terms_dipole = jnp.zeros(nparams)
-#     fidx=0
-#     for f in freqs:
-#         print(f"step {fidx}, frequency = {f:.2e}")
-#         grad_terms = jnp.array(grad_fn(*gwb_args,f=f))
-#         grad_terms_dipole = jnp.array(grad_dipole(*gwb_args,f=f))
-#         for i in range(nparams):
-#             for j in range(0,i+1):
-#                 # grad_terms[i] = (grad(gwb_model,argnums=(i,))(*gwb_args,f=f))[0]
-#                 # grad_terms[j] = (grad(gwb_model,argnums=(j,))(*gwb_args,f=f))[0]
-#                 # dont even need to pass grad terms, can multiply here
-#                 mat[i,j] =  astro_fisher_term_ij(f=f,gwb_args=gwb_args,
-#                                         grad_term_i=grad_terms[i],grad_term_j=grad_terms[j]
-#                                         ,grad_dipole_i=grad_terms_dipole[i],grad_dipole_j=grad_terms_dipole[j]
-#                                         ,gwb_model=gwb_model,star_cov=star_cov,)
-#                 mat[j,i] = mat[i,j]
-#                 # print(f" At f = {f*Tobs}, i = {i}, j = {j}, nan = {np.isnan(mat[i,j])}  ")
-#         fish+=mat
-#         fidx+=1
-#     return 0.5 * fish
-# gwb_args = (logamp,gamma,beta)
-# print("Original PTA freqs\n",freqs*Tobs)
-# freqs_new = freqs[:8] #np.array([(i+1)/Tobs for i in range(15)])
-# mat = astro_fisher(freqs,gwb_args,)
-# # print(mat)
-# param_cov_astro = np.linalg.inv(mat)
-# print("Astro only param cov\n",param_cov_astro)
-#-----------------------------------------------------------------------------------------
-
-
 
 # Full PTA+Astro Fisher calculation
 def full_from_blocks(A,B,D): # to get fullcov and derivatives from blocks
@@ -268,7 +202,6 @@ def full_from_blocks(A,B,D): # to get fullcov and derivatives from blocks
     mat2 = jnp.hstack([B.T,D])
     return jnp.vstack([mat1,mat2])
 
-# to fix
 def series_terms_ij(f,gwb_args,inv_A,A_i,A_j
                     ,grad_term_i,grad_term_j
                     ,grad_dipole_i,grad_dipole_j):
@@ -325,11 +258,8 @@ def cross_fisher(freqs,gwb_args,gwb_model=gwb_model,):
     grad_terms_dipole = jnp.zeros(nparams)
     fidx = 0
     for f in freqs:
-        # print(f"step {fidx}, frequency = {f:.2e}")
         grad_terms = jnp.array(grad_fn(*gwb_args,f=f))
         grad_terms_dipole = jnp.array(grad_dipole(*gwb_args,f=f))
-        # print(grad_terms)
-        # print(grad_terms_dipole)
         for i in range(nparams):
             for j in range(0,i+1):
                 mat[i,j] =  fisher_term_ij(f=f,gwb_args=gwb_args,
@@ -380,7 +310,8 @@ g.triangle_plot([gdsamples_pta,gdsamples_pta_astro],keys,
                 legend_labels=[f"PTA, {npsr} pulsars",f"+ $10^{int(np.log10(nstar))}$ stars, $ \\sigma = {sigma_mas}$ mas"],
                 filled=[False,True],markers=markers,contour_colors=['blue','red'],param_limits={'beta': (0,None)}, # type: ignore
                 contour_lws=[1.25,1.25]) 
-g.export('Fisher_Cross_monopole.pdf')
+noise_str = int(sigma_mas*1e3)
+g.export(f'Fisher_Cross_monopole_{noise_str:d}' + '_muas.pdf')
 
 
 ## PTA only vs cross with dipole
@@ -414,4 +345,4 @@ g.triangle_plot([gdsamples_pta,gdsamples_pta_astro],keys,
                 legend_labels=[f"PTA, {npsr} pulsars",f"+ $10^{int(np.log10(nstar))}$ stars, $ \\sigma = {sigma_mas}$ mas"],
                 filled=[False,True],markers=markers,contour_colors=['blue','red'],param_limits={'beta': (0,None)}, # type: ignore
                 contour_lws=[1.25,1.25]) 
-g.export('Fisher_Cross_Dipole.pdf')
+g.export(f'Fisher_Cross_Dipole_{noise_str:d}' + '_muas.pdf')

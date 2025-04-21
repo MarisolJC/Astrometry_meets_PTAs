@@ -12,23 +12,26 @@ phi0 = np.deg2rad(264)
 hn = np.array([[np.sin(theta0)*np.cos(phi0),np.sin(theta0)*np.sin(phi0),np.cos(theta0)]])
 
 
-@jit
 def HD(pvec,qvec):
     """
     Calculate the Hellings and Downs correlation function
+    pvec, qvec are the two pulsar vectors, normalisation convention of arxiv: 2006.14570
+    """
+    x =  jnp.sum(pvec*qvec)
+    y = 0.5 * (1 - x)
+    val = 1 + x/3 + 4*y*jnp.log(y) 
+    return val
+
+def psr_dipole(x):
+    """
+    Calculate the dipole correlation function
     pvec, qvec are the two pulsar vectors
     """
-    y = 0.5 * (1 - jnp.sum(pvec*qvec) )
-    return stop_gradient(1.5 * y * jnp.log(y) - 0.25 * y + 0.5)
-
-# psr_dipole as legendre polynomial
-dip_l = np.array([0.0434652, -0.130396, 0.217326, 0.0846325, 0.0411868, 0.0229939, \
-0.0140952, 0.0092465, 0.00638572, 0.00459142, 0.00341013, 0.00260119, \
-0.00202888, 0.0016127, 0.0013029, 0.00106756, 0.000885619, \
-0.000742752, 0.000629016, 0.000537353, 0.00046266])
-dip_poly = np.polynomial.legendre.Legendre(dip_l)
-def psr_dipole(x):
-    return dip_poly(x)
+    y = 0.5 * (1 - x)
+    val = 8 * (1/12 + y/2 + (y/2)*jnp.log(y)/(1-y) ) # 8 comes from the normalisation convention
+    val = jnp.where(jnp.abs(y)<1e-10,3/4,val)
+    val = jnp.where(jnp.abs(y-1)<1e-10,3/4,val)
+    return val
 
 @jit
 def pta_x_astro(pvec,nvec):
@@ -42,11 +45,8 @@ def pta_x_astro(pvec,nvec):
     pn = jnp.dot(pvec,nvec)
     vec = (pn*nvec - pvec)/(1-pn**2)
     yterm = (2*y - 2*y**2 + 3*y**2*jnp.log(y))
-    return stop_gradient(fac * vec * yterm)
+    return fac * vec * yterm
 
-# unused, see response.py
-def pta_x_astro_dipole(pvec,nvec,vvec=hn):
-    pass
 
 #Legendre polynomial representation of Fy
 def poly_fy(x):
@@ -75,11 +75,6 @@ def pairwise_monopole(pvec,nvec):
     ij_terms =  (2-2*y)*jnp.eye(3) - jnp.outer(pvec,pvec) - jnp.outer(nvec,nvec) - jnp.outer(nvec,pvec) + (1-2*y)*jnp.outer(pvec,nvec)
     return stop_gradient(fy * ij_terms)
 
-# unused, see response.py
-def pairwise_dipole(pvec,nvec,vvec=hn):
-    pass
-
-
 def pairwise_monopole_v2(pvec,nvec):
     """
     Monpole ORF for astrometry using conditionals to handle some edge cases. Pvec is N x 3 where N is the number of stars
@@ -101,7 +96,7 @@ def proj_angular(star_pos):
     r2 = [-y/(x**2 + y**2),x/(x**2 + y**2),jnp.zeros_like(z)]
     p = jnp.array([r1,r2])
     p = jnp.transpose(p,axes = (2,0,1))
-    return stop_gradient(p)
+    return p
 
 # utility function to split vmap over a batch of inputs,  minor modifications of https://github.com/martinjankowiak/saasbo/blob/main/util.py
 def split_vmap(func,input_arrays,batch_size=8):
