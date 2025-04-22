@@ -1,6 +1,6 @@
 # Measuring SGWB with Astrometry and PTAs
 
-This repository contains codes[^1] to calculate and visualise the Overlap Reduction Functions (ORFs), as well as the Fisher forecasts reported in :page_facing_up: [2412.14010](https://arxiv.org/abs/2412.14010).
+This repository contains codes to calculate and visualise the Overlap Reduction Functions (ORFs), as well as the Fisher forecasts reported in :page_facing_up: [2412.14010](https://arxiv.org/abs/2412.14010).
 
 ## SGWB Maps
 
@@ -29,7 +29,6 @@ This repository contains codes[^1] to calculate and visualise the Overlap Reduct
 * The folder :file_folder: **Fisher_Forecast_Synergy** contains the necessary files required to reproduce the results of section 3.2 of the paper. The files helper_functions.py and response are used to define the pta, astrometry and cross-correlation response functions. The other files with can be run from the command line (see the invidual files for the command line inputs). This will require an additional library [Hasasia](https://hasasia.readthedocs.io/en/latest/index.html) to generate the PTA noise curves. The python notebook **noise_vs_signal.ipynb** shows plots of the signal vs noise for the different scenarios studied in the paper.
 
 
-[^1]: The codes were run with Python version 3.11.9, numpy 1.26.4, and jax 0.4.31, healpy 1.17.3.
 
 
 ## To cite our work
